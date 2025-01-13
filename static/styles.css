@@ -1,0 +1,298 @@
+/* styles.css */
+
+body {
+    font-family: 'Libre Baskerville', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #85B8CD; /* This sets the background color */
+    color: #333;
+    background-image: url('/static/images/flower-right.png'), url('/static/images/flower-bottom-left.png');
+    background-position: right, bottom left; /* Position of each image */
+    background-repeat: no-repeat, no-repeat; /* No repeat for both images */
+    background-size: 350px 350px, 350px 350px; /* Size of each image */
+    background-blend-mode: screen, normal; /* Blending mode for each image */
+}
+
+
+header {
+    color: #333;
+    padding: 1em 0;
+    text-align: center;
+}
+
+.header-info {
+    display: flex;
+    padding: 0 2em;
+    font-size: 0.9em;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-family: 'Marcellus', serif;    
+    font-weight: 400; 
+    text-transform: uppercase; 
+    line-height: 1.31; 
+    letter-spacing: normal; 
+    font-size: 42px;
+}
+
+p, h2, h3, a{
+    font-weight: 400; /* Normal weight */
+    line-height: 1.6; /* Adjust for readability */
+}
+
+h2{
+    font-weight: 700; /* Bold for emphasis */
+    color: #333;
+}
+
+h3 {
+    font-weight: 700;
+}
+
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    margin: 1em 0 0;
+}
+
+nav a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    position: relative; /* Needed for positioning the pseudo-element */
+    padding-bottom: 5px; /* Space for the underline */
+}
+
+nav a::after {
+    content: ''; /* Create an empty pseudo-element */
+    position: absolute;
+    bottom: -2px; /* Position the line just below the link */
+    left: 50%;
+    width: 0; /* Start with no width */
+    height: 2px; /* Thickness of the bottom line */
+    background-color: #fff; /* Color of the bottom line */
+    transition: width 0.3s ease, left 0.3s ease; /* Animate width and position */
+}
+
+nav a:hover::after,
+nav a.active::after {
+    width: 100%;
+    left: 0;
+}
+
+
+
+main {
+    padding: 2em;
+}
+
+section {
+    margin-bottom: 2em;
+    text-align: center;
+}
+
+#catalog {
+    display:grid;
+    grid-template-columns: repeat(3, 1fr); /* Force 3 items per row */
+    padding: 0.5rem;
+    gap: 30px;
+    width: 100%;
+    justify-items: center;
+}
+.item {
+    background-color: #fff;
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;  /* Fixed width for the item */
+    position: relative;
+    margin: 20px auto;
+}
+
+.item-image {
+    width: 250px;  /* Fixed width */
+    height: 250px; /* Fixed height */
+    margin: 0 auto;  /* Center the image container */
+    border-radius: 5px;
+    object-fit: cover; /* Ensures the image fills the container without stretching */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.item-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three columns */
+    grid-template-rows: auto auto auto; /* Three rows, adjust as needed */
+    gap: 20px; /* No gap between items */
+    margin: 0 auto;
+    width: 80%; /* Adjust width as needed */
+    
+}
+
+.gallery-item {
+    position: relative;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Define grid areas for specific images */
+.gallery-item-1 { grid-area:  2 / 1 / 1; } /* Spans 2 rows, 1 column */
+.gallery-item-2 { grid-area: 1 / span / 1 / 4; } /* From row 1, col 2 to row 2, col 4 */
+.gallery-item-3 { grid-area: span span / span 1; } /* Spans 2 rows, 1 column */
+.gallery-item-4 { grid-area: 2 / 2 / 3 / 4; } /* From row 2, col 2 to row 3, col 4 */
+.gallery-item-5 { grid-area: 3 / 1 / 4 / 2; } /* From row 3, col 1 to row 4, col 2 */
+.gallery-item-6 { grid-area: span / span / span / span; } /* From row 3, col 2 to row 4, col 4 */
+.gallery-item-7 { grid-area: 4 / 1 / 5 / span; } /* From row 4, col 1 to row 5, col 2 */
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .gallery {
+        grid-template-columns: 1fr; /* Single column on small screens */
+    }
+    .gallery-item {
+        grid-area: auto !important; /* Reset grid areas for single column layout */
+    }
+
+    #catalog{
+     justify-content: center;
+     flex-direction: column;
+     margin: 0 auto; /* Center horizontally */
+     display: flex;
+
+    }
+
+    body,html {
+        overflow-x: hidden;
+
+    }
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-around; /* Space buttons evenly */
+    margin-top: 10px; /* Space between image/title and buttons */
+    text-decoration: none;
+
+}
+
+.reserve-button, .comprar-link-button {
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: 'Libre Baskerville', serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.reserve-button {
+    background-color: rgb(203, 217, 230); /* Light blue background */
+    color: #333; /* Dark text */
+    border: 0px solid;
+
+}
+
+.reserve-button:hover {
+    background-color: #42576c; /* Hover state color change */
+    color: white;
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.comprar-link-button  {
+    background-color: rgb(230, 228, 203); /* Light beige background */
+    color: #333; /* Dark text */
+    border: 0px solid;
+    text-decoration: none;
+}
+
+.comprar-link-button:hover {
+    background-color: rgb(177, 191, 157); /* Hover state color change */
+    color: #fff; /* White text */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    text-decoration: none;
+
+}
+
+.comprar-link-button a {
+    color: #333; /* Dark text */
+    border: 0px solid;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.comprar-link-button a:hover {
+    color: #fff; /* White text */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    text-decoration: none;
+
+}
+
+.reserve-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+#name {
+    width: 121.20px; /* Adjust the width */
+    height: 20px; /* Adjust the height */
+    font-size: 16px; /* Adjust the font size */
+    position: relative;
+    left: 4px;
+    transition: all 0.3s ease;
+}
+
+#name:hover{
+    transform: scale(1.05); /* Slightly enlarge on hover */
+
+}
+
+.reserve-form {
+    margin-top: 1em;
+}
+
+.reserve-form input {
+    padding: 0.5em;
+    margin-right: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+footer {
+    background-color: #E6BBBA;
+    color: #333;
+    border-top: 8px solid transparent; /* Base border size */
+    border-image: linear-gradient(to right, #F2C0BF, #85B8CD, #91C7DF, #A7C7E0, #F2C0BF); /* Gradient colors */
+    border-image-slice: 1; /* Ensure the gradient covers the entire border */
+    text-align: center;
+    padding: 1em 0;
+    margin-top: 2em;
+}
+

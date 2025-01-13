@@ -1,0 +1,29 @@
+<!-- templates/lista-de-cosas.html -->
+{% extends 'base.html' %}
+
+{% block title %}Lista de Cosas - Esposo y Esposa{% endblock %}
+
+{% block content %}
+    <h2>Lista de Cosas</h2>
+    <div id="catalog">
+        {% for item_id, item_data in items.items() %}
+        <div class="item">
+            <h3>{{ item_data.name }}</h3>
+            <img src="{{ item_data.image }}" alt="{{ item_data.name }}" class="item-image">
+            {% if reservations[item_id|string] %}
+                <p class="reserved-by">Reservado por: {{ reservations[item_id|string] }}</p>
+            {% else %}
+            <div class="buttons-container">
+                <button class="comprar-link-button"><a href="{{ item_data.link }}" target="_blank" style="text-decoration: none;">Ver Producto</a></button>
+                <button class="reserve-button" data-item-id="{{ item_id }}">Reservar</button>
+                <form class="reserve-form" style="display: none;">
+                    <input type="text" id="name" placeholder="Tu nombre">
+                    <button type="submit" class="reserve-button">Confirmar</button>
+                </form>
+                <p class="reserved-by" style="display: none;"></p>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

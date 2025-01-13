@@ -1,0 +1,38 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Esposo y Esposa{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <header>
+        <div class="header-info">
+            <span>Noviembre 15, 2024</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>Buenos Aires, Argentina</span>
+        </div>
+        <h1>ESPOSO <span style="color: #fff;">&</span> ESPOSA</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Inicio</a></li>
+                <li><a href="{{ url_for('gallery') }}" class="{% if request.endpoint == 'gallery' %}active{% endif %}">Galería</a></li>
+                <li><a href="{{ url_for('lista_de_cosas') }}" class="{% if request.endpoint == 'lista_de_cosas' %}active{% endif %}">Lista de Cosas</a></li>
+                <li><a href="#historia" class="{% if request.endpoint == 'historia' %}active{% endif %}">Nuestra Historia</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Esposo & Esposa. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
