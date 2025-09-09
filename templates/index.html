@@ -1,9 +1,75 @@
-<!-- templates/index.html -->
 {% extends 'base.html' %}
 
-{% block title %}Inicio - Esposo y Esposa{% endblock %}
+{% block title %}Inicio - Casamiento Octavio & Dafne{% endblock %}
 
 {% block content %}
-    <h2>Bienvenidos a nuestra página</h2>
-    <p>Explora nuestras opciones y haz tu reserva.</p>
+<style>
+/* Hide schedule and map sections on mobile devices (screen width <= 768px) */
+@media only screen and (max-width: 768px) {
+    .info-section.schedule,
+    .info-section.map-section h1, h2 {
+        color: #fff;
+    }
+}
+</style>
+
+    <section class="hero-video">
+        <video autoplay loop muted playsinline>
+            <source src="{{ url_for('static', filename='images/compromiso.mp4') }}" type="video/mp4">
+            Tu navegador no soporta el video.
+        </video>
+    </section>
+
+    <main class="elegant-wedding">
+        <div class="info-grid">
+            
+            <section class="info-section schedule">
+                <div class="elegant-box">
+                    <h2>Horario y Ubicaciones</h2>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-icon">
+                            <i class="fas fa-ring"></i>
+                        </div>
+                        <div class="schedule-details">
+                            <h3>Ceremonia Civil</h3>
+                            <p><strong>10:00 hs</strong></p>
+                            <p>Martín Fierro 3367, Villa Udaondo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-icon">
+                            <i class="fas fa-church"></i>
+                        </div>
+                        <div class="schedule-details">
+                            <h3>Sellamiento</h3>
+                            <p><strong>17:30 hs</strong></p>
+                            <p>Av. Gral. Pablo Ricchieri 4955, Ciudad Evita</p>
+                        </div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-icon">
+                            <i class="fas fa-glass-cheers"></i>
+                        </div>
+                        <div class="schedule-details">
+                            <h3>Recepción</h3>
+                            <p><strong>19:30 hs</strong></p>
+                            <p>Ozanam 1235, Morón</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="info-section map-section">
+            <div class="elegant-box" style="flex-direction: column; padding-top: 30px;">
+                <h2>Ubicaciones en el Mapa</h2>
+                <div class="map-container">
+<iframe src="https://www.google.com/maps/d/u/0/embed?mid=1VTe07_HmtsOO88wxRu4NVbQC8Izsb9I&amp;ehbc=2E312F" width="auto" height="450"></iframe>                </div>
+            </div>
+        </section>
+    </main>
+
 {% endblock %}

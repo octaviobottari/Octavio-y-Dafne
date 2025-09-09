@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Regalos - Octavio & Dafne{% endblock %}
+
+{% block content %}
+<style>
+    h1, li a {
+        color: #333;
+    }
+</style>
+<div style="padding-left:20px;">
+<h2>Lista de Regalos</h2>
+<p>¡Gracias por ser parte de nuestro comienzo juntos! Acá tienen los regalos que nos gustaría.
+    Si queres seleccionar alguno, hacé clic en "Reservar", poné tu nombre y tu número de contacto. 
+    Esto nos ayuda a que no se repitan los regalos.
+    Podés ver el producto haciendo click en "Ver Producto". 
+    Si preferís colaborar con dinero podes hacer click en los botones que dicen la cantidad de dinero, 
+    más abajo tenés una sección con links de pago.</p>
+</div>
+<div id="catalog">
+    {% for category, items in categories.items() %}
+    <div class="category-row">
+        <h3>{{ category }}</h3>
+        {% for item_id, item in items.items() %}
+        <div class="item">
+            <h4>{{ item.name }}</h4>
+                        <p class="item-description">{{ item.description }}</p>
+
+            <img src="{{ item.image }}" alt="{{ item.name }}" class="item-image">
+            <div class="buttons-container">
+                <a href="{{ item.link }}" target="_blank" class="comprar-link-button">Ver Producto</a>
+                {% if reservations[item_id|string] %}
+                <p class="reserved-by">Reservado por: {{ reservations[item_id|string].name }} ({{ reservations[item_id|string].contact }}) - {{ reservations[item_id|string].date }}</p>
+                {% else %}
+                <button class="reserve-button" data-item-id="{{ item_id }}">Reservar</button>
+                <form class="reserve-form" style="display: none;">
+                    <input type="text" id="name-{{ item_id }}" placeholder="Tu nombre" required>
+                    <input type="tel" id="contact-{{ item_id }}" placeholder="Tu número de contacto" pattern="[0-9+-\s]*" required>
+                    <button type="submit">Confirmar</button>
+                </form>
+                <p class="reserved-by" style="display: none;"></p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

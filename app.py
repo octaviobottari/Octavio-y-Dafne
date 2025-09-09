@@ -1,71 +1,120 @@
 from flask import Flask, render_template, request, jsonify
 import json
 import os
+from datetime import datetime
+import pytz
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
 DATA_FILE = "reservations.json"
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Sample list of items
-ITEMS = {
-    0: {"name": "Juego de Platos", "link": "https://www.mercadolibre.com.ar/juego-de-vajilla-bormioli-rocco-parma-de-18-piezas-blanco/p/MLA41380341#polycard_client=search-nordic&wid=MLA1929005134&sid=search&searchVariation=MLA41380341&position=19&search_layout=grid&type=product&tracking_id=6cfa5b3a-9896-425a-a0ad-e2044c3c0a8f", "image": "https://http2.mlstatic.com/D_NQ_NP_2X_813842-MLA79709616883_102024-F.webp"},
-    1: {"name": "Set de Toallas", "link": "https://articulo.mercadolibre.com.ar/MLA-1122357828-set-de-toalla-y-toallon-100-algodon-_JM?searchVariation=176819319491#polycard_client=search-nordic&searchVariation=176819319491&position=26&search_layout=grid&type=item&tracking_id=90c72cc3-8bed-4f51-ad57-edd9ac3da2da", "image": "https://http2.mlstatic.com/D_NQ_NP_2X_879872-MLA54037681349_022023-F.webp"},
-    2: {"name": "Cubiertos", "link": "https://www.mercadolibre.com.ar/set-de-cubiertos-alpina-home-box-24-piezas-acero-inoxidable-color-plateado/p/MLA42327209?pdp_filters=item_id:MLA1458768257#is_advertising=true&searchVariation=MLA42327209&position=1&search_layout=grid&type=pad&tracking_id=19fc771a-aeea-451e-9966-8f90f60102bd&is_advertising=true&ad_domain=VQCATCORE_LST&ad_position=1&ad_click_id=YmNmYTQxM2YtY2JhNC00YjAyLWI5N2YtZjY2OWI3ODc4M2Iw", "image": "https://http2.mlstatic.com/D_NQ_NP_2X_917918-MLA80234657551_102024-F.webp"},
-    3: {"name": "Cubiertos", "link": "https://www.mercadolibre.com.ar/set-de-cubiertos-alpina-home-box-24-piezas-acero-inoxidable-color-plateado/p/MLA42327209?pdp_filters=item_id:MLA1458768257#is_advertising=true&searchVariation=MLA42327209&position=1&search_layout=grid&type=pad&tracking_id=19fc771a-aeea-451e-9966-8f90f60102bd&is_advertising=true&ad_domain=VQCATCORE_LST&ad_position=1&ad_click_id=YmNmYTQxM2YtY2JhNC00YjAyLWI5N2YtZjY2OWI3ODc4M2Iw", "image": "https://http2.mlstatic.com/D_NQ_NP_2X_917918-MLA80234657551_102024-F.webp"}
-}
+# Ensure upload folder exists
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
-def load_reservations():
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def load_data():
     if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as file:
+        with open(DATA_FILE, "r", encoding='utf-8') as file:
             return json.load(file)
-    return {}
+    return {"items": {}, "reservations": {}, "categories": []}
 
-def save_reservations(data):
-    with open(DATA_FILE, "w") as file:
-        json.dump(data, file)
+def save_data(data):
+    with open(DATA_FILE, "w", encoding='utf-8') as file:
+        json.dump(data, file, ensure_ascii=False)
 
 @app.route("/")
 def index():
-    """Render the main page with items and reservations."""
-    reservations = load_reservations()
-    return render_template("index.html", items=ITEMS, reservations=reservations)
+    data = load_data()
+    return render_template("index.html", items=data["items"], reservations=data["reservations"])
 
 @app.route("/gallery")
 def gallery():
-    """Render the gallery page."""
     return render_template("gallery.html")
 
-@app.route("/lista-de-cosas")
-def lista_de_cosas():
-    """Render the list of items and reservations."""
-    reservations = load_reservations()
-    return render_template("lista-de-cosas.html", items=ITEMS, reservations=reservations)
+@app.route("/lista-de-regalos")
+def lista_de_regalos():
+    data = load_data()
+    categories = {}
+    for item_id, item in data["items"].items():
+        category = item.get("category", "Sin Categoría")
+        if category not in categories:
+            categories[category] = {}
+        categories[category][item_id] = item
+    return render_template("lista-de-regalos.html", categories=categories, reservations=data["reservations"])
+
+@app.route("/lista-crear")
+def lista_crear():
+    data = load_data()
+    return render_template("lista-crear-cosas.html", categories=data["categories"])
+
+@app.route("/api/items", methods=["POST"])
+def add_item():
+    name = request.form.get("name")
+    description = request.form.get("description")
+    link = request.form.get("link")
+    category = request.form.get("category")
+    image = request.files.get("image")
+
+    if not all([name, link, category, image]):
+        return jsonify({"error": "Missing required fields"}), 400
+
+    if not allowed_file(image.filename):
+        return jsonify({"error": "Invalid image format. Use PNG, JPG, JPEG, or GIF."}), 400
+
+    data_store = load_data()
+    item_id = str(len(data_store["items"]))
+    filename = secure_filename(image.filename)
+    image_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{item_id}_{filename}")
+    image.save(image_path)
+
+    data_store["items"][item_id] = {
+        "name": name,
+        "description": description,
+        "link": link,
+        "image": f"/{image_path}",
+        "category": category
+    }
+    if category not in data_store["categories"]:
+        data_store["categories"].append(category)
+    save_data(data_store)
+    return jsonify({"success": True, "item_id": item_id})
 
 @app.route("/api/reservations", methods=["GET"])
 def get_reservations():
-    """Return all reservations."""
-    reservations = load_reservations()
-    return jsonify(reservations)
+    data = load_data()
+    return jsonify(data["reservations"])
 
 @app.route("/api/reservations", methods=["POST"])
 def add_reservation():
-    """Add a new reservation."""
     data = request.json
     item_id = data.get("item_id")
     name = data.get("name")
+    contact = data.get("contact")
 
-    if item_id is None or not name:
-        return jsonify({"error": "Invalid data"}), 400
+    if item_id is None or not name or not contact:
+        return jsonify({"error": "Invalid data: name and contact are required"}), 400
 
-    reservations = load_reservations()
-
-    if str(item_id) in reservations:
+    data_store = load_data()
+    if str(item_id) in data_store["reservations"]:
         return jsonify({"error": "Item already reserved"}), 400
 
-    reservations[str(item_id)] = name
-    save_reservations(reservations)
+    argentina_tz = pytz.timezone('America/Argentina/Buenos_Aires')
+    reservation_time = datetime.now(argentina_tz).strftime("%d/%m/%Y %H:%M")
 
-    return jsonify({"success": True, "reservations": reservations})
+    data_store["reservations"][str(item_id)] = {
+        "name": name,
+        "contact": contact,
+        "date": reservation_time
+    }
+    save_data(data_store)
+    return jsonify({"success": True, "reservations": data_store["reservations"]})
 
 if __name__ == "__main__":
     app.run(debug=True)

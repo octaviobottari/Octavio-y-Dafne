@@ -4,18 +4,29 @@ body {
     font-family: 'Libre Baskerville', serif;
     margin: 0;
     padding: 0;
-    background-color: #85B8CD; /* This sets the background color */
     color: #333;
-    background-image: url('/static/images/flower-right.png'), url('/static/images/flower-bottom-left.png');
-    background-position: right, bottom left; /* Position of each image */
-    background-repeat: no-repeat, no-repeat; /* No repeat for both images */
-    background-size: 350px 350px, 350px 350px; /* Size of each image */
-    background-blend-mode: screen, normal; /* Blending mode for each image */
+
+    /* Fondo principal */
+    background-image: url('/static/images/background.png'),
+                      url('/static/images/flower-right.png'),
+                      url('/static/images/flower-bottom-left.png');
+    background-position: center, right, bottom left;
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-size: cover, 350px 350px, 350px 350px;
+
+    /* El fondo principal va por debajo */
+    background-blend-mode: normal, screen, normal;
+
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+body.fade-out{
+    opacity: 0;
 }
 
 
 header {
-    color: #333;
+    color: #31496a;
     padding: 1em 0;
     text-align: center;
 }
@@ -26,20 +37,30 @@ header {
     font-size: 0.9em;
 }
 
-h1 {
-    margin: 0;
-    font-size: 2.5em;
-    font-family: 'Marcellus', serif;    
-    font-weight: 400; 
-    text-transform: uppercase; 
-    line-height: 1.31; 
-    letter-spacing: normal; 
-    font-size: 42px;
+@font-face {
+    font-family: 'LeJourScript';
+    src: url('/static/fonts/LeJourScript-Eaqpg.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
 }
+
+h1 {
+    color: #fff;
+    margin: 0;
+    font-family: 'LeJourScript', cursive;
+    font-weight: 400;
+    font-size: 35px;
+    line-height: 1.31;
+    letter-spacing: normal;
+
+
+}
+
 
 p, h2, h3, a{
     font-weight: 400; /* Normal weight */
     line-height: 1.6; /* Adjust for readability */
+   
 }
 
 h2{
@@ -62,7 +83,7 @@ nav ul {
 }
 
 nav a {
-    color: #333;
+    color: #fff;
     text-decoration: none;
     font-weight: bold;
     position: relative; /* Needed for positioning the pseudo-element */
@@ -76,7 +97,7 @@ nav a::after {
     left: 50%;
     width: 0; /* Start with no width */
     height: 2px; /* Thickness of the bottom line */
-    background-color: #fff; /* Color of the bottom line */
+    background-color: #31496a; /* Color of the bottom line */
     transition: width 0.3s ease, left 0.3s ease; /* Animate width and position */
 }
 
@@ -86,10 +107,160 @@ nav a.active::after {
     left: 0;
 }
 
+/* Hamburger Menu Styles */
+.hamburger {
+    display: none; /* Hidden by default on larger screens */
+    cursor: pointer;
+    padding: 10px;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    z-index: 1000;
+}
+
+.hamburger span {
+    display: block;
+    width: 30px;
+    height: 3px;
+    background-color: #333;
+    margin: 6px 0;
+    transition: all 0.3s ease;
+}
+
+/* Transform hamburger into X when active */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px, -8px);
+}
+
+/* Mobile Navigation Menu */
+.nav-menu {
+    display: flex;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.nav-menu ul {
+    display: flex;
+    flex-direction: row;
+    gap: 2em;
+    margin: 1em 0 0;
+    padding: 0;
+}
+
+.nav-menu.active {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/images/background.png');
+
+    z-index: 999;
+    padding-top: 80px;
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out;
+}
+
+.nav-menu.active ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5em;
+}
+
+.nav-menu.active li {
+    margin: 0.5em 0;
+}
+
+.nav-menu.active a {
+    font-size: 1.5em;
+    color: #31496a;
+    font-family: 'Marcellus', serif;
+    text-transform: uppercase;
+    padding: 0.5em 1em;
+}
+
+.nav-menu.active a:hover::after,
+.nav-menu.active a.active::after {
+    width: 100%;
+    left: 0;
+    background-color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block; /* Show hamburger on mobile */
+    }
+
+    .nav-menu {
+        display: none; /* Hide menu by default on mobile */
+    }
+
+    .nav-menu.active {
+        display: block; /* Show when active */
+    }
+
+    header {
+        position: relative;
+    }
+
+
+
+        h1, h2 {
+        font-size: 2em;
+        text-shadow: 0px 1px #31496a;
+
+    
+     }
+
+    h3, p{
+        text-shadow: 0px 1px #31496a;
+        
+        
+    }
+    
+
+}
+
+/* Adjust header-info for mobile */
+@media (max-width: 768px) {
+    .header-info {
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center text */
+        white-space: normal; /* Treat &nbsp; as regular spaces */
+        padding: 30px;
+    }
+
+    .header-info span {
+        display: block; /* Ensure each span is on a new line */
+    }
+
+    /* Neutralize &nbsp; by resetting any inline spacing */
+    .header-info span + span::before {
+        content: none; /* Prevent any pseudo-element spacing */
+    }
+
+    footer p{
+        font-size: 12px;
+    }
+
+
+    }
 
 
 main {
     padding: 2em;
+
+
 }
 
 section {
@@ -286,13 +457,216 @@ section {
 }
 
 footer {
-    background-color: #E6BBBA;
+    background-color: rgba(255, 255, 255, 0.5);
     color: #333;
     border-top: 8px solid transparent; /* Base border size */
-    border-image: linear-gradient(to right, #F2C0BF, #85B8CD, #91C7DF, #A7C7E0, #F2C0BF); /* Gradient colors */
-    border-image-slice: 1; /* Ensure the gradient covers the entire border */
+border-image: linear-gradient(to right, rgba(66, 87, 108, 0.5), rgba(133, 184, 205, 0.5), rgba(145, 199, 223, 0.5), rgba(167, 199, 224, 0.5), rgba(66, 87, 108, 0.5));    border-image-slice: 1; /* Ensure the gradient covers the entire border */
     text-align: center;
     padding: 1em 0;
     margin-top: 2em;
 }
+
+.hero-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Coloca el video detrás de todo */
+    overflow: hidden;
+}
+
+.hero-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Contenido sobre el video */
+.content-over-video {
+    position: relative;
+    z-index: 1; /* Asegura que el contenido esté sobre el video */
+    background: rgba(255, 255, 255, 0.9); /* Fondo semitransparente para mejor legibilidad */
+    margin-top: 100vh; /* Empuja el contenido debajo del viewport */
+    padding: 2rem;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    text-align: center;
+}
+
+.hero-title {
+    font-family: 'LeJourScript', cursive;
+    font-size: 4.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-date {
+    font-size: 1.5rem;
+    font-family: 'Libre Baskerville', serif;
+}
+
+/* Cajas elegantes */
+.elegant-box {
+    background-image: url('/static/images/background.png');
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 90px;
+}
+
+.elegant-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    
+}
+
+.elegant-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Iconos de sección */
+.section-icon {
+    font-size: 2rem;
+    color: #d4af37;
+    margin-bottom: 1rem;
+}
+
+/* Dress code */
+.dress-code-description {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #31496a;
+    margin: 1rem 0;
+}
+
+.dress-code-details {
+    font-style: italic;
+    color: #666;
+    margin-top: auto; /* Empuja hacia abajo para alinear en grid */
+}
+
+/* Items de horario */
+.schedule-item {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    padding: 1.2rem;
+    background: #f9f9f9;
+    border-radius: 10px;
+    text-align: left;
+    
+}
+
+.schedule-icon {
+    font-size: 1.5rem;
+    color: #d4af37;
+    margin-right: 1.2rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+.schedule-details h3 {
+    color: #31496a;
+    margin-bottom: 0.5rem;
+    font-family: 'Marcellus', serif;
+    font-size: 1.1rem;
+}
+
+.schedule-details p {
+    margin: 0.3rem 0;
+    font-size: 0.95rem;
+}
+
+/* Mapa */
+.map-section .elegant-box {
+    height: auto;
+    width: 540px;
+}
+
+.map-container {
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.map-description {
+    font-style: italic;
+    color: #666;
+    margin-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.8rem;
+    }
+    
+    .schedule-item {
+        flex-direction: column;
+        text-align: center;
+        background: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .schedule-icon {
+        margin-right: 0;
+        margin-bottom: 0.8rem;
+    }
+    
+    .elegant-box {
+        padding: 1.5rem;
+        flex-direction: column;
+        background: none;
+        box-shadow: inherit;
+    }
+    
+    .info-grid {
+        gap: 1rem;
+    }
+    .map-section .elegant-box {
+    height: auto;
+    width: unset;
+}
+}
+
 
