@@ -34,9 +34,9 @@ def index():
     data = load_data()
     return render_template("index.html", items=data["items"], reservations=data["reservations"])
 
-@app.route("/gallery")
+@app.route("/nuestra-historia")
 def gallery():
-    return render_template("gallery.html")
+    return render_template("nuestra-historia.html")
 
 @app.route("/lista-de-regalos")
 def lista_de_regalos():
