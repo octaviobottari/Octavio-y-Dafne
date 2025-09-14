@@ -35,7 +35,7 @@ def index():
     return render_template("index.html", items=data["items"], reservations=data["reservations"])
 
 @app.route("/nuestra-historia")
-def gallery():
+def historia():
     return render_template("nuestra-historia.html")
 
 @app.route("/lista-de-regalos")
