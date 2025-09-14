@@ -5,7 +5,7 @@
 {% block content %}
     <div class="gallery-container">
         <h2>Nuestra Historia</h2>
-        <p style="color: #fff; text-align: center;">Explora los momentos que nos unieron.</p>
+        <p style="color: #31496a">Explora los momentos que nos unieron.</p>
 
         <div class="story-section">
             <h3>Cómo nos conocimos (desde mi perspectiva, Octavio)</h3>
@@ -198,10 +198,18 @@
             margin: 20px 0;
         }
         .story-image {
-            max-width: 100%;
+            max-width: 30%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+        h1, li a {
+    color: #333;
+}
+@media (max-width: 768px) {
+    .story-image{
+        max-width: 100%;
+    }
+}
     </style>
 {% endblock %}
