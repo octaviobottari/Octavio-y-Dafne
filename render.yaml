@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: wedding-gift-registry
+    name: Octavio-y-Dafne
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
@@ -11,13 +11,13 @@ services:
       - key: DATABASE_URL
         sync: false
         fromDatabase:
-          name: wedding-registry-db
+          name: wedding  # Match your dashboard database name
           property: connectionString
       - key: POETRY_VERSION
-        value: none  # Disable Poetry to ensure pip is used
+        value: none
     staticPublishPath: ./static
 
 databases:
-  - name: wedding
+  - name: wedding  # Match the dashboard database name
     plan: free
     databaseName: wedding
