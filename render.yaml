@@ -8,4 +8,16 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
+      - key: DATABASE_URL
+        sync: false
+        fromDatabase:
+          name: wedding-registry-db
+          property: connectionString
+      - key: POETRY_VERSION
+        value: none  # Disable Poetry to ensure pip is used
     staticPublishPath: ./static
+
+databases:
+  - name: wedding
+    plan: free
+    databaseName: wedding
