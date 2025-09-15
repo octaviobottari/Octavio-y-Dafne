@@ -5,6 +5,7 @@ from datetime import datetime
 import pytz
 from werkzeug.utils import secure_filename
 import logging
+import json
 
 app = Flask(__name__)
 
@@ -179,6 +180,23 @@ def download_reservations():
     if os.path.exists(DATA_FILE):
         return send_file(DATA_FILE, as_attachment=True)
     return jsonify({"error": "File not found"}), 404
+
+# Temporary endpoint to migrate reservations.json to PostgreSQL
+@app.route("/migrate-data")
+def migrate_data():
+    try:
+        data = json.load(open(DATA_FILE))
+        for item_id, item in data["items"].items():
+            db.session.add(Item(
+                id=item_id, name=item["name"], description=item["description"],
+                link=item["link"], image=item["image"], category=item["category"]
+            ))
+            if item["category"] and item["category"] not in [cat.name for cat in Category.query.all()]:
+                db.session.add(Category(name=item["category"]))
+        db.session.commit()
+        return jsonify({"success": "Data migrated"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
